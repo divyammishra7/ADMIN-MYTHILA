@@ -4,13 +4,13 @@ import { createClient } from "@supabase/supabase-js";
 const SupabaseContext = createContext();
 export const useSupabase = () => useContext(SupabaseContext);
 
-
+export const   supabase = createClient(
+  "https://dxpplwalsoawnmamajxq.supabase.co",
+  process.env.REACT_APP_SUPABASE_KEY
+);
 
 export const SupabaseProvider = ({ children }) => {
-    const supabase = createClient(
-      "https://dxpplwalsoawnmamajxq.supabase.co",
-      process.env.REACT_APP_SUPABASE_KEY
-    );
+   
     const Products="Products";
 
 
