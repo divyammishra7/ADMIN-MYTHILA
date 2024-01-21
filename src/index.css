@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.searchBar {
+    background-color: white !important;
+    color: black !important;
+    padding-left: 1.2rem !important;
+    padding-right: 1.2rem !important;
+  }

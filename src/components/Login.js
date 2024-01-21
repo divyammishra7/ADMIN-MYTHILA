@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
 import { supabase } from '../context/SupabaseContext'; // Import the supabase instance
-
+import { Input } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -26,11 +27,12 @@ function Login() {
     };
   
     return (
-      <div>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button onClick={signIn}>Sign In</button>
-        <button onClick={signOut}>Sign out</button>
+      <div className=' h-[100vh]  mx-auto flex flex-col justify-center items-center'>
+    
+        <Input type="email"    className="searchBar shadow-md"  placeholder="Email" value={email}  size='md' onChange={(e) => setEmail(e.target.value)} />
+        <Input type="password"    className="searchBar shadow-md mt-2" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Button onClick={signIn}>Sign In</Button>
+        <Button onClick={signOut}>Sign out</Button>
       </div>
     );
   };
