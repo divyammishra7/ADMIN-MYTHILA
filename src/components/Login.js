@@ -26,7 +26,7 @@ function Login() {
     };
   
     return (
-      <div className=' h-[100vh]  mx-auto flex flex-col justify-center items-center'>
+      <div className=' h-[100vh] w-[40%]  mx-auto flex flex-col justify-center items-center'>
     
         <Input type="email"    className="searchBar shadow-md"  placeholder="Email" value={email}  size='md' onChange={(e) => setEmail(e.target.value)} />
         <Input type="password"    className="searchBar shadow-md mt-2" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />

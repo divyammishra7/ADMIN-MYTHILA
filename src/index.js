@@ -5,12 +5,15 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { SupabaseProvider } from './context/SupabaseContext';
 import { BrowserRouter } from "react-router-dom";
+import { ChakraProvider } from "@chakra-ui/react";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <SupabaseProvider>
+    <ChakraProvider>
     <BrowserRouter>
     <App />
     </BrowserRouter>
+    </ChakraProvider>
     </SupabaseProvider>
 );
 
