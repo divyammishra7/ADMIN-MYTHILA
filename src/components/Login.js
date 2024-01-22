@@ -1,15 +1,13 @@
 
 import React, { useState } from 'react';
-import { supabase } from '../context/SupabaseContext'; // Import the supabase instance
+import { supabase, useSupabase } from '../context/SupabaseContext'; // Import the supabase instance
 import { Input } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/react';
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    async function signOut() {
-        const { data,error } = await supabase.auth.signOut()
-        
-      }
+    const { setAdminAuthenticated}=useSupabase();
+ 
   
     const signIn = async () => {
         if(email!='admin@mythila.com' || password!='1234'){
@@ -20,7 +18,8 @@ function Login() {
             email: email,
             password: password
           })
-          console.log(data);
+          // console.log(data);
+          setAdminAuthenticated(true);
       } catch (error) {
         console.error('Error:', error.message);
       }
@@ -32,7 +31,7 @@ function Login() {
         <Input type="email"    className="searchBar shadow-md"  placeholder="Email" value={email}  size='md' onChange={(e) => setEmail(e.target.value)} />
         <Input type="password"    className="searchBar shadow-md mt-2" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <Button onClick={signIn}>Sign In</Button>
-        <Button onClick={signOut}>Sign out</Button>
+       
       </div>
     );
   };

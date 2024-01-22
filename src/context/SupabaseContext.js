@@ -16,6 +16,7 @@ export const SupabaseProvider = ({ children }) => {
 
     const [loading,setLoading]=useState(true);
     const [tableData,setTableData]=useState([]);
+    const [adminAuthenticated, setAdminAuthenticated] = useState(false);
     useEffect(() => {
         const fetchTableData = async () => {
           try {
@@ -37,12 +38,31 @@ export const SupabaseProvider = ({ children }) => {
     
         fetchTableData();
       }, []);
+      async function checkUserAuthentication() { //
+        setLoading(true);
+     
+        const user= await supabase.auth.getUser();
+        
+      
+        if (user) {
+          setAdminAuthenticated(true);
+          setLoading(false);
+          
+        }
+        
+      
+      };
+      useEffect(()=>{//
+        checkUserAuthentication();
+        },[])//
     return (
         <SupabaseContext.Provider
           value={{
           loading,
           setLoading,
           tableData,
+          adminAuthenticated,
+          setAdminAuthenticated
           }}
         >
           {children}
