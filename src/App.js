@@ -25,6 +25,7 @@ function App() {
 
 
 // console.log(adminAuthenticated)//
+ console.log(adminAuthenticated)
 
   return (
     <div className="App">

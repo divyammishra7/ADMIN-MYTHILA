@@ -41,11 +41,13 @@ export const SupabaseProvider = ({ children }) => {
       async function checkUserAuthentication() { //
         setLoading(true);
      
-        const user= await supabase.auth.getUser();
+        const {data:user}= await supabase.auth.getUser();
+        console.log(user);
         
       
-        if (user) {
+        if (user.user!=null) {
           setAdminAuthenticated(true);
+
           setLoading(false);
           
         }
