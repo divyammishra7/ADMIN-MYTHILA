@@ -2,7 +2,7 @@ import React from 'react'
 
 function AddItem() {
   return (
-    <div>AddItem</div>
+    <div className='text-xl'>AddItem</div>
   )
 }
 

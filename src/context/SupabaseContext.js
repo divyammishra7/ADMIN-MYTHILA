@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
+import AddItem from "../components/AddItem";
 
 const SupabaseContext = createContext();
 export const useSupabase = () => useContext(SupabaseContext);
@@ -17,6 +18,7 @@ export const SupabaseProvider = ({ children }) => {
     const [loading,setLoading]=useState(true);
     const [tableData,setTableData]=useState([]);
     const [adminAuthenticated, setAdminAuthenticated] = useState(false);
+    const [ele,setEle]=useState(<AddItem/>)
     useEffect(() => {
         const fetchTableData = async () => {
           try {
@@ -64,7 +66,10 @@ export const SupabaseProvider = ({ children }) => {
           setLoading,
           tableData,
           adminAuthenticated,
-          setAdminAuthenticated
+          setAdminAuthenticated,
+          ele,
+          setEle
+  
           }}
         >
           {children}
