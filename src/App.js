@@ -51,8 +51,9 @@ function App() {
     <MenuItem onClick={()=>{
       setEle(<UpdateItem/>)
     }}>UPDATE AN ITEM </MenuItem>
- 
- 
+ <MenuItem>
+ <Button  onClick={signOut}>Sign Out</Button>
+ </MenuItem>
 
   </Menu>
 
