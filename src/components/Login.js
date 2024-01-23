@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { supabase, useSupabase } from '../context/SupabaseContext'; // Import the supabase instance
 import { Input } from '@chakra-ui/react';
 import { Button } from '@chakra-ui/react';
+import { Heading } from '@chakra-ui/react'
+import { Image,Box } from '@chakra-ui/react'
 function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -26,12 +28,28 @@ function Login() {
     };
   
     return (
-      <div className=' h-[100vh] w-[40%]  mx-auto flex flex-col justify-center items-center'>
+      <div>
+        <div className='flex md:w-[100%] mx-auto justify-center items-center'>
+      
+  <Image src="https://ecomu.netlify.app/static/media/logom.749151c1ff28a2ffd9fc.png"  className='md:w-[5%] w-[10%]'
+   
+  
+    alt='Dan Abramov'/>
+
+          
+          <h1 className='text-4xl'>
+      ADMIN MYTHIILA
+      </h1>
+      
+        </div>
+      <div className=' w-[40%]  mx-auto flex flex-col justify-center items-center mt-32'>
+       
     
         <Input type="email"    className="searchBar shadow-md"  placeholder="Email" value={email}  size='md' onChange={(e) => setEmail(e.target.value)} />
         <Input type="password"    className="searchBar shadow-md mt-2" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <Button onClick={signIn}>Sign In</Button>
+        <Button onClick={signIn} className='mt-2'>Sign In</Button>
        
+      </div>
       </div>
     );
   };
