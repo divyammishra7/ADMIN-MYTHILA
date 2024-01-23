@@ -19,6 +19,32 @@ export const SupabaseProvider = ({ children }) => {
     const [tableData,setTableData]=useState([]);
     const [adminAuthenticated, setAdminAuthenticated] = useState(false);
     const [ele,setEle]=useState(<AddItem/>)
+    const addItemSubmit=async(formData)=>{
+      try {
+        const { data, error } = await supabase.from("Products").insert([
+          {
+            Name: formData.Name,
+            created_at: new Date().toISOString(),
+          image: formData.image,
+            description: formData.description,
+            price: formData.price,
+            category: formData.category,
+           
+            shipping:formData.shipping,
+            featured:formData.featured
+          },
+        ]);
+  
+        if (error) {
+          console.error("Error inserting data:", error.message);
+        } else {
+          console.log("Data inserted successfully:", data);
+        }
+      } catch (error) {
+        console.error("Error processing form submission:", error.message);
+      }
+
+    }
     useEffect(() => {
         const fetchTableData = async () => {
           try {
@@ -59,6 +85,11 @@ export const SupabaseProvider = ({ children }) => {
       useEffect(()=>{//
         checkUserAuthentication();
         },[])//
+      
+
+
+
+
     return (
         <SupabaseContext.Provider
           value={{
@@ -68,7 +99,8 @@ export const SupabaseProvider = ({ children }) => {
           adminAuthenticated,
           setAdminAuthenticated,
           ele,
-          setEle
+          setEle,
+          addItemSubmit
   
           }}
         >

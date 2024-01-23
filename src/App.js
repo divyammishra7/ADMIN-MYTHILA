@@ -34,12 +34,15 @@ function App() {
 
   return (
     <div className="">
+      {adminAuthenticated && 
         <Routes>
           <Route path='/additem' element={<AddItem/>}></Route>
           <Route path='/deleteitem' element={<DeleteItem/>}></Route>
           <Route path='/updateitem' element={<UpdateItem/>}></Route>
         </Routes>
+}
       {
+
         !adminAuthenticated?
       <Login/>:
       <>
