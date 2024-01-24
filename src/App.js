@@ -1,26 +1,31 @@
+import React from 'react';
 import Login from './components/Login';
 import logo from './logo.svg';
 import { supabase, useSupabase } from './context/SupabaseContext';
 import { useState,useEffect } from 'react';
 import { Button } from '@chakra-ui/react';
-import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+
 import { Route } from 'react-router-dom';
 import AddItem from './components/AddItem'
 import { Link } from 'react-router-dom';
 import { Routes } from "react-router-dom";
 import DeleteItem from './components/DeleteItem'
 import UpdateItem from './components/UpdateItem'
+
+
+
+
+import Navbar from './components/Navbar';
+
+
+
 function App() {
-  const [ele,setEle]=useState(<AddItem/>)
+ 
 
-  const [loading,setLoading]=useState(true);
-  const {adminAuthenticated,setAdminAuthenticated}=useSupabase();
 
-  async function signOut() {
-    const { data,error } = await supabase.auth.signOut()
-    
-    setAdminAuthenticated(false);
-  }
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const {ele,adminAuthenticated}=useSupabase();
+
 
 
 
@@ -28,45 +33,31 @@ function App() {
  console.log(adminAuthenticated)
 
   return (
-    <div className="App">
+    <div className="">
+      {adminAuthenticated && 
         <Routes>
-          <Route path='/document' element={<AddItem/>}></Route>
+          <Route path='/additem' element={<AddItem/>}></Route>
+          <Route path='/deleteitem' element={<DeleteItem/>}></Route>
+          <Route path='/updateitem' element={<UpdateItem/>}></Route>
         </Routes>
+}
       {
+
         !adminAuthenticated?
-      <Login/>:<div >
-        header
-        <div className='h-[100vh] fixed bg-[#F3F3F3]' >
-        <Sidebar>
-  <Menu>
-    {/* <SubMenu label="Charts">
-      <MenuItem> Pie charts </MenuItem>
-      <MenuItem> Line charts </MenuItem>
-    </SubMenu> */}
-    <MenuItem onClick={()=>{
-      setEle(<AddItem/>)
-    }}>ADD AN ITEM </MenuItem>
-    <MenuItem onClick={()=>{
-      setEle(<DeleteItem/>)
-    }}> DELETE AN ITEM </MenuItem>
-    <MenuItem onClick={()=>{
-      setEle(<UpdateItem/>)
-    }}>UPDATE AN ITEM </MenuItem>
- <MenuItem>
- <Button  onClick={signOut}>Sign Out</Button>
- </MenuItem>
+      <Login/>:
+      <>
+     
+    <Navbar/>
+    <div className='hero '>
+      {ele}
+    </div>
+       
 
-  </Menu>
 
-</Sidebar>
-
-</div>
-
-<div className='hero absolute left-[50%]'>
-  {ele}
-</div>
-
-      </div>
+    </>
+        
+   
+    
 }
 
     </div>

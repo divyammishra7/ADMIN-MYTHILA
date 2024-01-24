@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
+import AddItem from "../components/AddItem";
 
 const SupabaseContext = createContext();
 export const useSupabase = () => useContext(SupabaseContext);
@@ -17,6 +18,33 @@ export const SupabaseProvider = ({ children }) => {
     const [loading,setLoading]=useState(true);
     const [tableData,setTableData]=useState([]);
     const [adminAuthenticated, setAdminAuthenticated] = useState(false);
+    const [ele,setEle]=useState(<AddItem/>)
+    const addItemSubmit=async(formData)=>{
+      try {
+        const { data, error } = await supabase.from("Products").insert([
+          {
+            Name: formData.Name,
+            created_at: new Date().toISOString(),
+          image: formData.image,
+            description: formData.description,
+            price: formData.price,
+            category: formData.category,
+           
+            shipping:formData.shipping,
+            featured:formData.featured
+          },
+        ]);
+  
+        if (error) {
+          console.error("Error inserting data:", error.message);
+        } else {
+          console.log("Data inserted successfully:", data);
+        }
+      } catch (error) {
+        console.error("Error processing form submission:", error.message);
+      }
+
+    }
     useEffect(() => {
         const fetchTableData = async () => {
           try {
@@ -57,6 +85,11 @@ export const SupabaseProvider = ({ children }) => {
       useEffect(()=>{//
         checkUserAuthentication();
         },[])//
+      
+
+
+
+
     return (
         <SupabaseContext.Provider
           value={{
@@ -64,7 +97,11 @@ export const SupabaseProvider = ({ children }) => {
           setLoading,
           tableData,
           adminAuthenticated,
-          setAdminAuthenticated
+          setAdminAuthenticated,
+          ele,
+          setEle,
+          addItemSubmit
+  
           }}
         >
           {children}
