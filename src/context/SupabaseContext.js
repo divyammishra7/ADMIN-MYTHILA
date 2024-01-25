@@ -14,7 +14,7 @@ export const SupabaseProvider = ({ children }) => {
    
     const Products="Products";
 
-
+    const [products, setProducts] = useState([]);
     const [loading,setLoading]=useState(true);
     const [tableData,setTableData]=useState([]);
     const [adminAuthenticated, setAdminAuthenticated] = useState(false);
@@ -46,6 +46,52 @@ export const SupabaseProvider = ({ children }) => {
 
     }
 
+    const updateItemSubmit = async(formData) => {
+      try {
+        const {data, error} = await supabase.from("Products")
+        .update([
+          {
+            Name: formData.Name,
+            created_at: new Date().toISOString(),
+            image: formData.image,
+            description: formData.description,
+            price: formData.price,
+            category: formData.category,
+            shipping:formData.shipping,
+            featured:formData.featured
+          }
+        ]);
+        if (error) {
+          console.error("Error inserting data:", error.message);
+        } else {
+          console.log("Data inserted successfully:", data);
+        }
+      } catch (error) {
+        console.error("Error processing from submission:", error.message);
+      }
+    }
+
+    const fetchProductData = async(id) => {
+      try {
+        let supabaseQuery = supabase.from("Products").select("*");
+
+        if (id!=null) {
+          supabaseQuery = supabaseQuery.eq("id", id);
+        }
+
+        const {data, error} = await supabaseQuery;
+
+        if (error) {
+          console.log("Error fetching product: ", error.message);
+        } else {
+          const productData = data || [];
+          setProducts(productData);
+          return productData;
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error.message);
+      }
+    }
 
 
     useEffect(() => {
@@ -103,8 +149,10 @@ export const SupabaseProvider = ({ children }) => {
           setAdminAuthenticated,
           ele,
           setEle,
-          addItemSubmit
-  
+          addItemSubmit,
+          updateItemSubmit,
+          fetchProductData,
+          products
           }}
         >
           {children}

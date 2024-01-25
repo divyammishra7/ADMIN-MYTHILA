@@ -1,4 +1,4 @@
-import { Flex, FormControl, FormLabel, Input } from '@chakra-ui/react'
+import { Button, Flex, FormControl, FormLabel, Input } from '@chakra-ui/react'
 import React from 'react'
 import { useState } from 'react';
 import { useSupabase } from '../context/SupabaseContext';
@@ -44,6 +44,9 @@ function UpdateItem() {
           <FormLabel>Category</FormLabel>
           <Input type='text' name="Name" value={formData.category} onChange={handleChange} placeholder='Category'/>
         </FormControl>
+        <Button type='submit' className='mt-4 customButton'>
+          Submit
+        </Button>
       </form>
     </Flex>
   )

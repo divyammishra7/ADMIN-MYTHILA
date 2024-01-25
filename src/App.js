@@ -16,6 +16,7 @@ import UpdateItem from './components/UpdateItem'
 
 
 import Navbar from './components/Navbar';
+import AllProducts from './components/AllProducts';
 
 
 
@@ -38,7 +39,7 @@ function App() {
         <Routes>
           <Route path='/additem' element={<AddItem/>}></Route>
           <Route path='/deleteitem' element={<DeleteItem/>}></Route>
-          <Route path='/updateitem' element={<UpdateItem/>}></Route>
+          <Route path='/updateitem' element={<AllProducts/>}></Route>
         </Routes>
 }
       {

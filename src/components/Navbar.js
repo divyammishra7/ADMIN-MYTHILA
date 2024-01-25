@@ -21,6 +21,7 @@ import {supabase,useSupabase} from '../context/SupabaseContext'
 import AddItem from './AddItem';
 import DeleteItem from './DeleteItem';
 import UpdateItem from './UpdateItem';
+import AllProducts from './AllProducts';
 function Navbar() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const btnRef = React.useRef()
@@ -69,7 +70,7 @@ function Navbar() {
             onClose();
          }}>DELETE ITEM</h2>
          <h2  style={{cursor:'pointer'}}onClick={()=>{
-            setEle(<UpdateItem/>)
+            setEle(<AllProducts/>)
             onClose();
          }}>Update ITEM</h2>
          </DrawerBody>
