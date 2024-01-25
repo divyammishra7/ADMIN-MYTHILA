@@ -45,6 +45,9 @@ export const SupabaseProvider = ({ children }) => {
       }
 
     }
+
+
+
     useEffect(() => {
         const fetchTableData = async () => {
           try {
