@@ -8,14 +8,23 @@ import {
   Input,
   Button
 } from '@chakra-ui/react'
+import { useToast } from '@chakra-ui/react'
 import { useState } from 'react'
 import { Textarea } from '@chakra-ui/react'
 import { useSupabase } from '../context/SupabaseContext'
 function AddItem() {
   const {addItemSubmit}=useSupabase();
+  const toast = useToast()
   const handleSubmit=async(e)=>{
     e.preventDefault();
    await addItemSubmit(formData)
+   toast({
+    title: 'Product Addded !!.',
+    description: "Your Product has been successfully Added.",
+    status: 'success',
+    duration: 3000,
+    isClosable: true,
+  })
     console.log("Done", formData);
   }
 
