@@ -37,9 +37,9 @@ function App() {
     <div className="">
       {adminAuthenticated && 
         <Routes>
-          <Route path='/additem' element={<AddItem/>}></Route>
+          {/* <Route path='/additem' element={<AddItem/>}></Route>
           <Route path='/deleteitem' element={<DeleteItem/>}></Route>
-          <Route path='/updateitem' element={<AllProducts/>}></Route>
+          <Route path='/updateitem' element={<AllProducts/>}></Route> */}
         </Routes>
 }
       {

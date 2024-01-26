@@ -1,9 +1,10 @@
-import { Table, Thead, Tr, Th,Td, Flex, Tbody } from '@chakra-ui/react'
+import { Table, Thead, Tr, Th,Td, Flex, Tbody, Input, Button } from '@chakra-ui/react'
 import React, { useEffect } from 'react'
 import { useSupabase } from '../context/SupabaseContext'
+import UpdateItem from './UpdateItem';
 
 const AllProducts = () => {
-    const { fetchProductData, products } = useSupabase();
+    const { fetchProductData, products, setEle } = useSupabase();
 
     useEffect(() => {
         fetchProductData(null);
@@ -21,17 +22,23 @@ const AllProducts = () => {
                         <Th>Product Price</Th>
                         <Th>Product Desc</Th>
                         <Th>Image Link</Th>
+                        <Th>Actions</Th>
                     </Tr>
                 </Thead>
                 <Tbody>
                     {
                         products.map((product) => (
                             <Tr key={product.id}>
-                              <Td>{product.Name}</Td>
-                              <Td>{product.category}</Td>
-                              <Td>{product.price}</Td>
-                              <Td>{product.description}</Td>
-                              <Td>{product.image}</Td>
+                              <Td><Input value={product.Name}></Input></Td>
+                              <Td><Input value={product.category}/></Td>
+                              <Td><Input value={product.price}/></Td>
+                              <Td><Input value={product.description}/></Td>
+                              <Td><Input value={product.image}/></Td>
+                              <Td>
+                                <Button onClick={() => {setEle(<UpdateItem prod={product}/>)}}>
+                                    Update
+                                </Button>
+                              </Td>
                             </Tr>
                         ))
                     }

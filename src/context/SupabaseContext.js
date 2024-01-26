@@ -46,7 +46,7 @@ export const SupabaseProvider = ({ children }) => {
 
     }
 
-    const updateItemSubmit = async(formData) => {
+    const updateItemSubmit = async(formData, id) => {
       try {
         const {data, error} = await supabase.from("Products")
         .update([
@@ -60,7 +60,7 @@ export const SupabaseProvider = ({ children }) => {
             shipping:formData.shipping,
             featured:formData.featured
           }
-        ]);
+        ]).eq('id', id);
         if (error) {
           console.error("Error inserting data:", error.message);
         } else {
@@ -86,6 +86,7 @@ export const SupabaseProvider = ({ children }) => {
         } else {
           const productData = data || [];
           setProducts(productData);
+          console.log("product data from context", products);
           return productData;
         }
       } catch (error) {
