@@ -71,6 +71,23 @@ export const SupabaseProvider = ({ children }) => {
       }
     }
 
+    const deleteItemSubmit = async(id) => {
+      try {
+        const { error } = await supabase
+        .from('Products')
+        .delete()
+        .eq('id', id);
+
+        fetchProductData(null);
+
+        if (error) {
+          console.error("Error inserting data:", error.message);
+        }
+      } catch (error) {
+        console.error("Error processing form submission:", error.message);
+      }
+    }
+
     const fetchProductData = async(id) => {
       try {
         let supabaseQuery = supabase.from("Products").select("*");
@@ -153,7 +170,8 @@ export const SupabaseProvider = ({ children }) => {
           addItemSubmit,
           updateItemSubmit,
           fetchProductData,
-          products
+          products,
+          deleteItemSubmit
           }}
         >
           {children}
