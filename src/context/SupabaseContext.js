@@ -1,33 +1,38 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 import AddItem from "../components/AddItem";
+import AllProducts from "../components/AllProducts";
+import Dashboard from "../components/Dashboard";
+import { v4 as uuidv4 } from 'uuid';
 
 const SupabaseContext = createContext();
 export const useSupabase = () => useContext(SupabaseContext);
 
 export const   supabase = createClient(
-  "https://dxpplwalsoawnmamajxq.supabase.co",
+  "https://oxcjhpacnlqmkdmabxxr.supabase.co",
   process.env.REACT_APP_SUPABASE_KEY
 );
 
 export const SupabaseProvider = ({ children }) => {
    
-    const Products="Products";
+    const Products="products";
 
     const [products, setProducts] = useState([]);
     const [loading,setLoading]=useState(true);
     const [tableData,setTableData]=useState([]);
     const [adminAuthenticated, setAdminAuthenticated] = useState(false);
-    const [ele,setEle]=useState(<AddItem/>)
+    const [ele,setEle]=useState(<Dashboard/>)
     const addItemSubmit=async(formData)=>{
       try {
-        const { data, error } = await supabase.from("Products").insert([
+        const { data, error } = await supabase.from("products").insert([
           {
-            Name: formData.Name,
-            created_at: new Date().toISOString(),
+             id: uuidv4(),    
+            name: formData.Name,
+            colors:[],
           image: formData.image,
             description: formData.description,
             price: formData.price,
+              company:"mythila",
             category: formData.category,
            
             shipping:formData.shipping,
@@ -48,14 +53,16 @@ export const SupabaseProvider = ({ children }) => {
 
     const updateItemSubmit = async(formData, id) => {
       try {
-        const {data, error} = await supabase.from("Products")
+        const {data, error} = await supabase.from("products")
         .update([
           {
-            Name: formData.Name,
-            created_at: new Date().toISOString(),
+            
+            name: formData.Name,
+            colors:[],
             image: formData.image,
             description: formData.description,
             price: formData.price,
+            company:"mythila",
             category: formData.category,
             shipping:formData.shipping,
             featured:formData.featured
@@ -74,7 +81,7 @@ export const SupabaseProvider = ({ children }) => {
     const deleteItemSubmit = async(id) => {
       try {
         const { error } = await supabase
-        .from('Products')
+        .from('products')
         .delete()
         .eq('id', id);
 
@@ -90,7 +97,7 @@ export const SupabaseProvider = ({ children }) => {
 
     const fetchProductData = async(id) => {
       try {
-        let supabaseQuery = supabase.from("Products").select("*");
+        let supabaseQuery = supabase.from("products").select("*");
 
         if (id!=null) {
           supabaseQuery = supabaseQuery.eq("id", id);
