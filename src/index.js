@@ -6,15 +6,16 @@ import reportWebVitals from './reportWebVitals';
 import { SupabaseProvider } from './context/SupabaseContext';
 import { BrowserRouter } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <SupabaseProvider>
     <ChakraProvider>
-    <BrowserRouter>
-    <App />
-    </BrowserRouter>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </ChakraProvider>
-    </SupabaseProvider>
+  </SupabaseProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

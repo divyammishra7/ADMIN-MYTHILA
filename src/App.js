@@ -2,36 +2,23 @@ import React from 'react';
 import Login from './components/Login';
 import logo from './logo.svg';
 import { supabase, useSupabase } from './context/SupabaseContext';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@chakra-ui/react';
-
 import { Route } from 'react-router-dom';
-import AddItem from './components/AddItem'
+import AddItem from './components/AddItem';
 import { Link } from 'react-router-dom';
 import { Routes } from "react-router-dom";
-import DeleteItem from './components/DeleteItem'
-import UpdateItem from './components/UpdateItem'
-
-
-
-
+import DeleteItem from './components/DeleteItem';
+import UpdateItem from './components/UpdateItem';
 import Navbar from './components/Navbar';
 import AllProducts from './components/AllProducts';
 
-
-
 function App() {
- 
-
-
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const {ele,adminAuthenticated}=useSupabase();
+  const { ele, adminAuthenticated } = useSupabase();
 
-
-
-
-// console.log(adminAuthenticated)//
- console.log(adminAuthenticated)
+  // console.log(adminAuthenticated)
+  console.log(adminAuthenticated);
 
   return (
     <div className="">
@@ -41,26 +28,17 @@ function App() {
           <Route path='/deleteitem' element={<DeleteItem/>}></Route>
           <Route path='/updateitem' element={<AllProducts/>}></Route> */}
         </Routes>
-}
-      {
-
-        !adminAuthenticated?
-      <Login/>:
-      <>
-     
-    <Navbar/>
-    <div className='hero '>
-      {ele}
-    </div>
-       
-
-
-    </>
-        
-   
-    
-}
-
+      }
+      {!adminAuthenticated ? (
+        <Login />
+      ) : (
+        <>
+          <Navbar />
+          <div className='hero '>
+            {ele}
+          </div>
+        </>
+      )}
     </div>
   );
 }
