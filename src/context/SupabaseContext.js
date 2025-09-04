@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import AddItem from "../components/AddItem";
 
 const SupabaseContext = createContext();
 export const useSupabase = () => useContext(SupabaseContext);
@@ -17,7 +16,6 @@ export const SupabaseProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [tableData, setTableData] = useState([]);
   const [adminAuthenticated, setAdminAuthenticated] = useState(false);
-  const [ele, setEle] = useState(<AddItem/>);
 
   const addItemSubmit = async (formData) => {
     try {
@@ -155,8 +153,6 @@ export const SupabaseProvider = ({ children }) => {
         tableData,
         adminAuthenticated,
         setAdminAuthenticated,
-        ele,
-        setEle,
         addItemSubmit,
         updateItemSubmit,
         fetchProductData,

@@ -2,11 +2,13 @@ import { Button, Flex, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { useSupabase } from '../context/SupabaseContext';
+import { useApp } from '../context/AppContext';
 import { useToast } from '@chakra-ui/react';
 import AllProducts from './AllProducts';
 
 function UpdateItem({ prod }) {
-  const { updateItemSubmit, setEle } = useSupabase();
+  const { updateItemSubmit } = useSupabase();
+  const { setCurrentComponent } = useApp();
   const toast = useToast();
 
   useEffect(() => {
@@ -42,7 +44,7 @@ function UpdateItem({ prod }) {
       duration: 3000,
       isClosable: true,
     });
-    setEle(<AllProducts/>);
+    setCurrentComponent(<AllProducts />);
     console.log("Updated!", formData);
   };
 

@@ -1,10 +1,12 @@
 import { Table, Thead, Tr, Th, Td, Flex, Tbody, Input, Button } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { useSupabase } from '../context/SupabaseContext';
+import { useApp } from '../context/AppContext';
 import UpdateItem from './UpdateItem';
 
 const AllProducts = () => {
-  const { fetchProductData, products, setEle } = useSupabase();
+  const { fetchProductData, products } = useSupabase();
+  const { setCurrentComponent } = useApp();
 
   useEffect(() => {
     fetchProductData(null);
@@ -34,7 +36,7 @@ const AllProducts = () => {
                 <Td><Input value={product.description}/></Td>
                 <Td><Input value={product.image}/></Td>
                 <Td>
-                  <Button onClick={() => {setEle(<UpdateItem prod={product}/>)}}>
+                  <Button onClick={() => {setCurrentComponent(<UpdateItem prod={product} />)}}>
                     Update
                   </Button>
                 </Td>

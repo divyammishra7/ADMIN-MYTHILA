@@ -2,6 +2,7 @@ import React from 'react';
 import Login from './components/Login';
 import logo from './logo.svg';
 import { supabase, useSupabase } from './context/SupabaseContext';
+import { useApp } from './context/AppContext';
 import { useState, useEffect } from 'react';
 import { Button } from '@chakra-ui/react';
 import { Route } from 'react-router-dom';
@@ -15,7 +16,8 @@ import AllProducts from './components/AllProducts';
 
 function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { ele, adminAuthenticated } = useSupabase();
+  const { adminAuthenticated } = useSupabase();
+  const { currentComponent } = useApp();
 
   // console.log(adminAuthenticated)
   console.log(adminAuthenticated);
@@ -35,7 +37,7 @@ function App() {
         <>
           <Navbar />
           <div className='hero '>
-            {ele}
+            {currentComponent}
           </div>
         </>
       )}

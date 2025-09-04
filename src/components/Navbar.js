@@ -18,9 +18,9 @@ import { HamburgerIcon } from '@chakra-ui/icons';
 import { useState, useEffect } from 'react';
 import { Button } from '@chakra-ui/react';
 import { supabase, useSupabase } from '../context/SupabaseContext';
+import { useApp } from '../context/AppContext';
 import AddItem from './AddItem';
 import DeleteItem from './DeleteItem';
-import UpdateItem from './UpdateItem';
 import AllProducts from './AllProducts';
 
 function Navbar() {
@@ -28,13 +28,12 @@ function Navbar() {
   const btnRef = React.useRef();
     
   const { adminAuthenticated, setAdminAuthenticated } = useSupabase();
+  const { setCurrentComponent } = useApp();
 
   async function signOut() {
     const { data, error } = await supabase.auth.signOut();
     setAdminAuthenticated(false);
   }
-
-  const { setEle } = useSupabase();
 
   return (
     <>
@@ -61,15 +60,15 @@ function Navbar() {
           <DrawerHeader borderBottomWidth='1px'>Basic Drawer</DrawerHeader>
           <DrawerBody>
             <h2 style={{cursor:'pointer'}} onClick={() => {
-              setEle(<AddItem/>);
+              setCurrentComponent(<AddItem />);
               onClose();
             }}>ADD ITEM</h2>
             <h2 style={{cursor:'pointer'}} onClick={() => {
-              setEle(<DeleteItem/>);
+              setCurrentComponent(<DeleteItem />);
               onClose();
             }}>DELETE ITEM</h2>
             <h2 style={{cursor:'pointer'}} onClick={() => {
-              setEle(<AllProducts/>);
+              setCurrentComponent(<AllProducts />);
               onClose();
             }}>Update ITEM</h2>
           </DrawerBody>
