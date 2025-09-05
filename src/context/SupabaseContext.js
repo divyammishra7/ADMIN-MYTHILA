@@ -5,7 +5,7 @@ const SupabaseContext = createContext();
 export const useSupabase = () => useContext(SupabaseContext);
 
 export const supabase = createClient(
-  "https://dxpplwalsoawnmamajxq.supabase.co",
+  "https://oxcjhpacnlqmkdmabxxr.supabase.co",
   process.env.REACT_APP_SUPABASE_KEY
 );
 
@@ -16,6 +16,7 @@ export const SupabaseProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [tableData, setTableData] = useState([]);
   const [adminAuthenticated, setAdminAuthenticated] = useState(false);
+  const [orders, setOrders] = useState([]);
 
   const addItemSubmit = async (formData) => {
     try {
@@ -108,6 +109,67 @@ export const SupabaseProvider = ({ children }) => {
     }
   };
 
+  // Orders APIs (Supabase schema: public.orders, public.order_details, public.products)
+  const fetchOrders = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('*')
+        .order('order_date', { ascending: false });
+      if (error) {
+        console.error('Error fetching orders:', error.message);
+        return [];
+      }
+      setOrders(data || []);
+      return data || [];
+    } catch (err) {
+      console.error('Unexpected error fetching orders:', err.message);
+      return [];
+    }
+  };
+
+  const fetchOrderLinesWithProducts = async (orderId) => {
+    if (!orderId) return [];
+    try {
+      const { data, error } = await supabase
+        .from('order_details')
+        .select('id, order_id, product_id, quantity, product:products(*)')
+        .eq('order_id', orderId);
+      if (error) {
+        console.error('Error fetching order lines:', error.message);
+        return [];
+      }
+      return (data || []).map((row) => ({
+        id: row.id,
+        order_id: row.order_id,
+        product_id: row.product_id,
+        quantity: row.quantity,
+        product: row.product
+      }));
+    } catch (err) {
+      console.error('Unexpected error fetching order lines:', err.message);
+      return [];
+    }
+  };
+
+  const fetchOrderLinesForOrderIds = async (orderIds) => {
+    if (!orderIds || !orderIds.length) return [];
+    try {
+      const { data, error } = await supabase
+        .from('order_details')
+        .select('id, order_id, product_id, quantity, product:products(*)')
+        .in('order_id', orderIds);
+      if (error) {
+        console.error('Error fetching order lines for ids:', error.message);
+        return [];
+      }
+      return data || [];
+    } catch (err) {
+      console.error('Unexpected error fetching order lines for ids:', err.message);
+      return [];
+    }
+  };
+
   useEffect(() => {
     const fetchTableData = async () => {
       try {
@@ -157,7 +219,13 @@ export const SupabaseProvider = ({ children }) => {
         updateItemSubmit,
         fetchProductData,
         products,
-        deleteItemSubmit
+        deleteItemSubmit,
+        // Orders/Analytics
+        orders,
+        fetchOrders,
+        fetchOrderLinesWithProducts,
+        fetchOrderLinesForOrderIds,
+        supabase
       }}
     >
       {children}

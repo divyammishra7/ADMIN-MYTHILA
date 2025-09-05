@@ -1,32 +1,13 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import {
-  Drawer,
-  DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  isOpen,
-  onOpen,
-  onClose,
-  useDisclosure,
-  Input
-} from '@chakra-ui/react';
-import { HamburgerIcon } from '@chakra-ui/icons';
-import { useState, useEffect } from 'react';
-import { Button } from '@chakra-ui/react';
+import { Button, Flex, HStack, Box, Spacer, Image, Text } from '@chakra-ui/react';
 import { supabase, useSupabase } from '../context/SupabaseContext';
 import { useApp } from '../context/AppContext';
 import AddItem from './AddItem';
 import DeleteItem from './DeleteItem';
 import AllProducts from './AllProducts';
+import Dashboard from './Dashboard';
 
 function Navbar() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = React.useRef();
-    
   const { adminAuthenticated, setAdminAuthenticated } = useSupabase();
   const { setCurrentComponent } = useApp();
 
@@ -36,45 +17,23 @@ function Navbar() {
   }
 
   return (
-    <>
-      <div className='nav flex justify-between items-center'>
-        <Button ref={btnRef} onClick={onOpen} className=''>
-          <HamburgerIcon/>
-        </Button>
-        
-        <div className='text-center flex items-center justify-center text-2xl w-[40%]'>
-          Mythila Admin
-          <img src="https://ecomu.netlify.app/static/media/logom.749151c1ff28a2ffd9fc.png" className='w-[10%]'></img>
-        </div>
-        
-        <Button onClick={signOut} className=''>Sign Out</Button>
-      </div>
-      <Drawer
-        isOpen={isOpen}
-        placement='left'
-        onClose={onClose}
-        finalFocusRef={btnRef}
-      >
-        <DrawerOverlay />
-        <DrawerContent>
-          <DrawerHeader borderBottomWidth='1px'>Basic Drawer</DrawerHeader>
-          <DrawerBody>
-            <h2 style={{cursor:'pointer'}} onClick={() => {
-              setCurrentComponent(<AddItem />);
-              onClose();
-            }}>ADD ITEM</h2>
-            <h2 style={{cursor:'pointer'}} onClick={() => {
-              setCurrentComponent(<DeleteItem />);
-              onClose();
-            }}>DELETE ITEM</h2>
-            <h2 style={{cursor:'pointer'}} onClick={() => {
-              setCurrentComponent(<AllProducts />);
-              onClose();
-            }}>Update ITEM</h2>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-    </>
+    <Box as="nav" w="100%" borderBottomWidth="1px" bg="white" position="sticky" top={0} zIndex={10}>
+      <Flex align="center" px={4} py={3}>
+        <HStack spacing={3}>
+          <Image src="https://ecomu.netlify.app/static/media/logom.749151c1ff28a2ffd9fc.png" alt="Mythila" boxSize="36px" />
+          <Text fontWeight="bold" fontSize="lg">Mythila Admin</Text>
+        </HStack>
+        <Spacer />
+        <HStack spacing={2}>
+          <Button size="sm" variant="ghost" onClick={() => setCurrentComponent(<Dashboard />)}>Dashboard</Button>
+          <Button size="sm" variant="ghost" onClick={() => setCurrentComponent(<AddItem />)}>Add Item</Button>
+          <Button size="sm" variant="ghost" onClick={() => setCurrentComponent(<DeleteItem />)}>Delete Item</Button>
+          <Button size="sm" variant="ghost" onClick={() => setCurrentComponent(<AllProducts />)}>Update Item</Button>
+        </HStack>
+        <Spacer />
+        <Button size="sm" colorScheme="red" onClick={signOut}>Sign Out</Button>
+      </Flex>
+    </Box>
   );
 }
 
