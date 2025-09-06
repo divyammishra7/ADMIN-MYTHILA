@@ -48,7 +48,7 @@ const AllProducts = ({ onUpdate }) => {
                   <Button
                     colorScheme="blue"
                     size="sm"
-                    onClick={() => onUpdate && onUpdate(product)} // parent ko bhej rahe product
+                    onClick={() => onUpdate && onUpdate(product)}
                   >
                     Update
                   </Button>

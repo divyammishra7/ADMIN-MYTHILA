@@ -1,10 +1,10 @@
-import React from 'react';
-import Login from './components/Login';
-import { useSupabase } from './context/SupabaseContext';
-import Navbar from './components/Navbar';
+import React from 'react'
+import Login from './components/Login'
+import { useSupabase } from './context/SupabaseContext'
+import Navbar from './components/Navbar'
 
 function App() {
-  const { adminAuthenticated } = useSupabase();
+  const { adminAuthenticated } = useSupabase()
 
   return (
     <div className="App">
@@ -16,7 +16,7 @@ function App() {
         <Navbar />
       )}
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
