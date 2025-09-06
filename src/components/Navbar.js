@@ -1,38 +1,76 @@
-import React from 'react';
-import { Button, Flex, HStack, Box, Spacer, Image, Text } from '@chakra-ui/react';
-import { supabase, useSupabase } from '../context/SupabaseContext';
-import { useApp } from '../context/AppContext';
-import AddItem from './AddItem';
-import DeleteItem from './DeleteItem';
-import AllProducts from './AllProducts';
-import Dashboard from './Dashboard';
+import React, { useState } from "react";
+import { Tabs, TabList, TabPanels, Tab, TabPanel, Box, Flex, Button } from "@chakra-ui/react";
+import { useSupabase, supabase } from "../context/SupabaseContext";
+import AddItem from "./AddItem";
+import DeleteItem from "./DeleteItem";
+import UpdateItem from "./UpdateItem";
+import AllProducts from "./AllProducts";
+import Dashboard from "./Dashboard";
 
 function Navbar() {
-  const { adminAuthenticated, setAdminAuthenticated } = useSupabase();
-  const { setCurrentComponent } = useApp();
+  const { setAdminAuthenticated } = useSupabase();
+
+  const [selectedProduct, setSelectedProduct] = useState(null); // <-- Add this
+  const [tabIndex, setTabIndex] = useState(0); // control active tab
 
   async function signOut() {
-    const { data, error } = await supabase.auth.signOut();
+    await supabase.auth.signOut();
     setAdminAuthenticated(false);
   }
 
   return (
-    <Box as="nav" w="100%" borderBottomWidth="1px" bg="white" position="sticky" top={0} zIndex={10}>
-      <Flex align="center" px={4} py={3}>
-        <HStack spacing={3}>
-          <Image src="https://ecomu.netlify.app/static/media/logom.749151c1ff28a2ffd9fc.png" alt="Mythila" boxSize="36px" />
-          <Text fontWeight="bold" fontSize="lg">Mythila Admin</Text>
-        </HStack>
-        <Spacer />
-        <HStack spacing={2}>
-          <Button size="sm" variant="ghost" onClick={() => setCurrentComponent(<Dashboard />)}>Dashboard</Button>
-          <Button size="sm" variant="ghost" onClick={() => setCurrentComponent(<AddItem />)}>Add Item</Button>
-          <Button size="sm" variant="ghost" onClick={() => setCurrentComponent(<DeleteItem />)}>Delete Item</Button>
-          <Button size="sm" variant="ghost" onClick={() => setCurrentComponent(<AllProducts />)}>Update Item</Button>
-        </HStack>
-        <Spacer />
-        <Button size="sm" colorScheme="red" onClick={signOut}>Sign Out</Button>
+    <Box>
+      {/* Top navbar */}
+      <Flex justify="space-between" align="center" p={4} bg="gray.100" borderBottom="1px solid #ccc">
+        <Flex align="center" gap={4}>
+          <Box fontSize="2xl" fontWeight="bold">
+            Mythila Admin
+          </Box>
+          <img
+            src="https://ecomu.netlify.app/static/media/logom.749151c1ff28a2ffd9fc.png"
+            alt="logo"
+            className="w-[50px]"
+          />
+        </Flex>
+
+        <Button colorScheme="red" onClick={signOut}>
+          Sign Out
+        </Button>
       </Flex>
+
+      {/* Tabs */}
+      <Tabs index={tabIndex} onChange={(index) => setTabIndex(index)} variant="enclosed" colorScheme="blue" mt={4}>
+        <TabList>
+          <Tab>Dashboard</Tab>
+          <Tab>Add Item</Tab>
+          <Tab>Delete Item</Tab>
+          <Tab>Update Item</Tab>
+          <Tab>All Products</Tab>
+        </TabList>
+
+        <TabPanels>
+          <TabPanel>
+            <Dashboard />
+          </TabPanel>
+          <TabPanel>
+            <AddItem />
+          </TabPanel>
+          <TabPanel>
+            <DeleteItem />
+          </TabPanel>
+          <TabPanel>
+            <UpdateItem prod={selectedProduct} />
+          </TabPanel>
+          <TabPanel>
+            <AllProducts
+              onUpdate={(product) => {
+                setSelectedProduct(product);
+                setTabIndex(3); // Update Item tab index
+              }}
+            />
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Box>
   );
 }

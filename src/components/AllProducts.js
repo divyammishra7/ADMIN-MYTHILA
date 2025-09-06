@@ -1,42 +1,55 @@
-import { Table, Thead, Tr, Th, Td, Flex, Tbody, Input, Button } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
-import { useSupabase } from '../context/SupabaseContext';
-import { useApp } from '../context/AppContext';
-import UpdateItem from './UpdateItem';
+import { Table, Thead, Tr, Th, Td, Flex, Tbody, Input, Button, Avatar, HStack } from '@chakra-ui/react'
+import React, { useEffect } from 'react'
+import { useSupabase } from '../context/SupabaseContext'
 
-const AllProducts = () => {
-  const { fetchProductData, products } = useSupabase();
-  const { setCurrentComponent } = useApp();
+const AllProducts = ({ onUpdate }) => {
+  const { fetchProductData, products } = useSupabase()
 
   useEffect(() => {
-    fetchProductData(null);
-    console.log("products: ", products);
-  }, []);
-    
+    fetchProductData(null)
+  }, [])
+
   return (
-    <Flex justify={'center'}>
-      <div className='w-[80%] mt-10'>
+    <Flex justify="center" mt={10}>
+      <div className="w-[80%]">
         <Table variant="simple">
           <Thead>
             <Tr>
-              <Th>Product Name</Th>
-              <Th>Product Category</Th>
-              <Th>Product Price</Th>
-              <Th>Product Desc</Th>
+              <Th>Product</Th>
+              <Th>Category</Th>
+              <Th>Price</Th>
+              <Th>Description</Th>
               <Th>Image Link</Th>
               <Th>Actions</Th>
             </Tr>
           </Thead>
           <Tbody>
-            {products.map((product) => (
+            {products?.map((product) => (
               <Tr key={product.id}>
-                <Td><Input value={product.Name}></Input></Td>
-                <Td><Input value={product.category}/></Td>
-                <Td><Input value={product.price}/></Td>
-                <Td><Input value={product.description}/></Td>
-                <Td><Input value={product.image}/></Td>
                 <Td>
-                  <Button onClick={() => {setCurrentComponent(<UpdateItem prod={product} />)}}>
+                  <HStack spacing={3}>
+                    <Avatar src={product.image} size="sm" />
+                    <Input value={product.name} isReadOnly border="none" />
+                  </HStack>
+                </Td>
+                <Td>
+                  <Input value={product.category} isReadOnly border="none" />
+                </Td>
+                <Td>
+                  <Input value={product.price} isReadOnly border="none" />
+                </Td>
+                <Td>
+                  <Input value={product.description} isReadOnly border="none" />
+                </Td>
+                <Td>
+                  <Input value={product.image} isReadOnly border="none" />
+                </Td>
+                <Td>
+                  <Button
+                    colorScheme="blue"
+                    size="sm"
+                    onClick={() => onUpdate && onUpdate(product)}
+                  >
                     Update
                   </Button>
                 </Td>
@@ -46,7 +59,7 @@ const AllProducts = () => {
         </Table>
       </div>
     </Flex>
-  );
-};
+  )
+}
 
-export default AllProducts;
+export default AllProducts
