@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
 
+const API_BASE = process.env.REACT_APP_API_BASE || "http://localhost:5000/api";
+
 const SupabaseContext = createContext();
 export const useSupabase = () => useContext(SupabaseContext);
 
@@ -20,24 +22,17 @@ export const SupabaseProvider = ({ children }) => {
 
   const addItemSubmit = async (formData) => {
     try {
-      const { data, error } = await supabase.from("Products").insert([
-        {
-          Name: formData.Name,
-          created_at: new Date().toISOString(),
-          image: formData.image,
-          description: formData.description,
-          price: formData.price,
-          category: formData.category,
-          shipping: formData.shipping,
-          featured: formData.featured
-        },
-      ]);
-
-      if (error) {
-        console.error("Error inserting data:", error.message);
-      } else {
-        console.log("Data inserted successfully:", data);
+      const res = await fetch(`${API_BASE}/dashboard/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        const payload = await res.json().catch(() => ({}));
+        throw new Error(payload.error || 'Failed to create product');
       }
+      const data = await res.json();
+      console.log("Data inserted successfully:", data);
     } catch (error) {
       console.error("Error processing form submission:", error.message);
     }
@@ -45,25 +40,17 @@ export const SupabaseProvider = ({ children }) => {
 
   const updateItemSubmit = async (formData, id) => {
     try {
-      const { data, error } = await supabase.from("Products")
-        .update([
-          {
-            Name: formData.Name,
-            created_at: new Date().toISOString(),
-            image: formData.image,
-            description: formData.description,
-            price: formData.price,
-            category: formData.category,
-            shipping: formData.shipping,
-            featured: formData.featured
-          }
-        ]).eq('id', id);
-      
-      if (error) {
-        console.error("Error inserting data:", error.message);
-      } else {
-        console.log("Data inserted successfully:", data);
+      const res = await fetch(`${API_BASE}/dashboard/products/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) {
+        const payload = await res.json().catch(() => ({}));
+        throw new Error(payload.error || 'Failed to update product');
       }
+      const data = await res.json();
+      console.log("Data updated successfully:", data);
     } catch (error) {
       console.error("Error processing from submission:", error.message);
     }
@@ -71,16 +58,14 @@ export const SupabaseProvider = ({ children }) => {
 
   const deleteItemSubmit = async (id) => {
     try {
-      const { error } = await supabase
-        .from('Products')
-        .delete()
-        .eq('id', id);
-
-      fetchProductData(null);
-
-      if (error) {
-        console.error("Error inserting data:", error.message);
+      const res = await fetch(`${API_BASE}/dashboard/products/${id}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok && res.status !== 204) {
+        const payload = await res.json().catch(() => ({}));
+        throw new Error(payload.error || 'Failed to delete product');
       }
+      fetchProductData(null);
     } catch (error) {
       console.error("Error processing form submission:", error.message);
     }
@@ -88,38 +73,35 @@ export const SupabaseProvider = ({ children }) => {
 
   const fetchProductData = async (id) => {
     try {
-      let supabaseQuery = supabase.from("Products").select("*");
-
+      const url = new URL(`${API_BASE}/dashboard/products`);
       if (id != null) {
-        supabaseQuery = supabaseQuery.eq("id", id);
+        url.searchParams.append('id', id);
       }
-
-      const { data, error } = await supabaseQuery;
-
-      if (error) {
-        console.log("Error fetching product: ", error.message);
-      } else {
-        const productData = data || [];
-        setProducts(productData);
-        console.log("product data from context", products);
-        return productData;
+      const res = await fetch(url.toString());
+      if (!res.ok) {
+        const payload = await res.json().catch(() => ({}));
+        throw new Error(payload.error || 'Failed to fetch products');
       }
+      const data = await res.json();
+      const productData = data || [];
+      setProducts(productData);
+      console.log("product data from context", products);
+      return productData;
     } catch (error) {
       console.error("Error fetching data:", error.message);
+      return [];
     }
   };
 
   // Orders APIs (Supabase schema: public.orders, public.order_details, public.products)
   const fetchOrders = async () => {
     try {
-      const { data, error } = await supabase
-        .from('orders')
-        .select('*')
-        .order('order_date', { ascending: false });
-      if (error) {
-        console.error('Error fetching orders:', error.message);
-        return [];
+      const res = await fetch(`${API_BASE}/analytics/orders`);
+      if (!res.ok) {
+        const payload = await res.json().catch(() => ({}));
+        throw new Error(payload.error || 'Failed to fetch orders');
       }
+      const data = await res.json();
       setOrders(data || []);
       return data || [];
     } catch (err) {
@@ -131,14 +113,14 @@ export const SupabaseProvider = ({ children }) => {
   const fetchOrderLinesWithProducts = async (orderId) => {
     if (!orderId) return [];
     try {
-      const { data, error } = await supabase
-        .from('order_details')
-        .select('id, order_id, product_id, quantity, product:products(*)')
-        .eq('order_id', orderId);
-      if (error) {
-        console.error('Error fetching order lines:', error.message);
-        return [];
+      const url = new URL(`${API_BASE}/analytics/order-lines`);
+      url.searchParams.append('orderId', orderId);
+      const res = await fetch(url.toString());
+      if (!res.ok) {
+        const payload = await res.json().catch(() => ({}));
+        throw new Error(payload.error || 'Failed to fetch order lines');
       }
+      const data = await res.json();
       return (data || []).map((row) => ({
         id: row.id,
         order_id: row.order_id,
@@ -155,14 +137,14 @@ export const SupabaseProvider = ({ children }) => {
   const fetchOrderLinesForOrderIds = async (orderIds) => {
     if (!orderIds || !orderIds.length) return [];
     try {
-      const { data, error } = await supabase
-        .from('order_details')
-        .select('id, order_id, product_id, quantity, product:products(*)')
-        .in('order_id', orderIds);
-      if (error) {
-        console.error('Error fetching order lines for ids:', error.message);
-        return [];
+      const url = new URL(`${API_BASE}/analytics/order-lines`);
+      url.searchParams.append('orderIds', orderIds.join(','));
+      const res = await fetch(url.toString());
+      if (!res.ok) {
+        const payload = await res.json().catch(() => ({}));
+        throw new Error(payload.error || 'Failed to fetch order lines for ids');
       }
+      const data = await res.json();
       return data || [];
     } catch (err) {
       console.error('Unexpected error fetching order lines for ids:', err.message);
